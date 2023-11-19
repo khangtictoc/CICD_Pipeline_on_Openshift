@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels: 
+    some-label: agent-pod
+spec:
+  serviceAccountName: sa-khangth11
+  containers:
+  - name: inbound-agent
+    image: 10.98.86.99:8085/jenkins/inbound-agent:latest
+    command: ["sleep"]
+    args: ["99d"]
+    
+  - name: maven
+    image: 10.98.86.99:8085/library/maven:latest
+    command: ["sleep"]
+    args: ["99d"]
+    volumeMounts:
+    - name: setting-mvn
+      mountPath: /home/jenkins/settings.yml
+      subPath: settingsYaml
+    - name: homejenkins-volume
+      mountPath: /home/jenkins
+    - name: mvnpkg
+      mountPath: /home/jenkins/.m2/repository
+    env:
+    - name: SONAR_USER_HOME
+      value: /home/jenkins/sonar
+  
+  - name: kaniko
+    image: 10.98.86.99:8085/darkhero101/kaniko-project:debug
+    command: ["sleep"]
+    args: ["99d"]
+    volumeMounts:
+    - name: docker-config
+      mountPath: /kaniko/.docker
+    securityContext:
+    runAsUser: 0
+
+  - name: helm
+    image: 10.98.86.99:8085/alpine/helm:latest
+    command: ["sleep"]
+    args: ["99d"]
+    volumeMounts:
+    - name: homejenkins-volume
+      mountPath: /home/jenkins
+
+  volumes:
+  - name: setting-mvn
+    configMap:
+      name: khangth11-setmvn-cm             
+  - name: homejenkins-volume
+    emptyDir: {}
+  - name: mvnpkg
+    persistentVolumeClaim:
+      claimName: khangth11-mvnpkg-pvc
+  - name: docker-config
+    secret:
+      secretName: dockerconfig
+
+      

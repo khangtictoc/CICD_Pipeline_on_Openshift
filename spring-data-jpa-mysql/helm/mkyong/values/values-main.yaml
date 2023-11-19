@@ -1,0 +1,72 @@
+replicaCount: 1
+
+svcLabels:
+  svcName: mkyong-main
+routeLabels:
+  routeName: mkyong-main
+podLabels:
+  podName: mkyong-main
+deplLabels:
+  deployName: mkyong-main
+svcmonLabels:
+  svcmonName: mkyong-main
+ingressLabels:
+  ingressName: mkyong-main
+
+deployEnvLabel: main
+
+image:
+  repository: 10.98.86.99:8082/khangth11/main/mkyong
+  pullPolicy: IfNotPresent
+  tag: latest
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: "mkyong"
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: "sa-khangth11"
+
+podAnnotations: {}
+
+
+podSecurityContext: {}
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 8080
+  portName: webapp-port
+
+ingress:
+  enabled: true
+  className: ""
+  annotations: {}
+  hosts:
+    - host: main.mkyong.khangtictoc.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+
+
+resources: {}
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+
+vols:
+- logsPath: /home/logs
+volMnts:
+  logsPath: /tmp/mkyong-project/logs
+
+servicemonitor:
+  interval: 30s
+  scheme: http
+  path: /metrics/prometheus

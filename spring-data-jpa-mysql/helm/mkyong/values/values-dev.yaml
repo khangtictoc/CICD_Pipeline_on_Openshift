@@ -1,0 +1,67 @@
+replicaCount: 1
+
+svcLabels:
+  svcName: petclinic
+routeLabels:
+  routeName: petclinic
+podLabels:
+  podName: petclinic
+deplLabels:
+  deployName: petclinic
+
+deployEnvLabel: dev
+
+image:
+  repository: 10.98.86.99:8082/khangth11/dev/petclinic
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: "petclinic"
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: "sa-khangth11"
+
+podAnnotations: {}
+
+
+podSecurityContext: {}
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+
+route:
+  host: dev.petclinic.khangtictoc.com
+portRoute:
+  targetPort: 8080
+
+resources: {}
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+
+vols:
+- logsPath: /home/logs
+volMnts:
+  logsPath: /tmp/petclinic-project/logs
+

@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-mkyong-{{ .Values.deployEnvLabel}}
+  labels:
+    {{- .Values.deplLabels | toYaml | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- .Values.podLabels | toYaml | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- .Values.podLabels | toYaml | nindent 8 }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"

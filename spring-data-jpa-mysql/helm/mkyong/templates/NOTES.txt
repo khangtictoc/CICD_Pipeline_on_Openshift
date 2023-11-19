@@ -1,0 +1,8 @@
+1.  Set hosts for routing to our web. In `/etc/hosts` (Linux)
+
+10.98.218.202     
+
+2.  Visit the {{ include "mkyong.fullname" . | upper}} at
+
+Enjoy!
+
