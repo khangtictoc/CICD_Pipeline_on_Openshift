@@ -20,6 +20,7 @@ Image:
 - `stable`: Stable version of well-health app
 - `latest`: Build with newest code, may not work correctly
 - `$hash ($githash + 'DDMMYYYY')`: Build with version 'X' pushed by `$githash`, may not work correctly
+- Each shared library (i.e 'build-lib') is stored as seperated repository
 
 Environment
 - Production: Full pipeline
